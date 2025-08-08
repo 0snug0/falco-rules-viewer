@@ -1,0 +1,3 @@
+Flask
+PyYaml
+Flask-Cors
