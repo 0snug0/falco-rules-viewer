@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 def load_config():
-    with open('config.yaml', 'r') as f:
+    with open('falco-rules-viewer/backend/config.yaml', 'r') as f:
         return yaml.safe_load(f)
 
 def parse_rules_files(files):
@@ -98,13 +98,13 @@ def upload_file():
         return 'No selected file', 400
     if file:
         filename = file.filename
-        filepath = os.path.join('uploads', filename)
+        filepath = os.path.join('falco-rules-viewer/backend/uploads', filename)
         if not os.path.exists('uploads'):
             os.makedirs('uploads')
         file.save(filepath)
 
         # Update config to use the new file
-        with open('config.yaml', 'w') as f:
+        with open('falco-rules-viewer/backend/config.yaml', 'w') as f:
             yaml.dump({'rules_files': [filepath]}, f)
 
         return 'File uploaded successfully', 200

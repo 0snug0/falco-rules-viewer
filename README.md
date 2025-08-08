@@ -17,7 +17,12 @@ npm start
 
 # Add custom rules
 
-If using the Sysdig Feed, remove the `falco_rules.yaml` file from the `rules/` directory and add the new rules, it can be any yaml file.
+## Upload the rules
+You can upload the rules directly into the UI, which will override the config and only show the rules from the uploaded directory
+
+## Append to the rules or use multiple rule files
+
+If using the Sysdig Feed, remove the `falco_rules.yaml` file from the `rules/` directory and add the new rules to override. Or you can add a new rules file and update the config to read all the rule files.
 
 ![Rules Viewer](/img/Rules%20Viewer.gif)
 
