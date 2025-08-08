@@ -5,6 +5,7 @@ import Macros from './components/Macros';
 import Lists from './components/Lists';
 import Modal from './components/Modal';
 import DetailsPane from './components/DetailsPane';
+import Upload from './components/Upload';
 import './App.css';
 
 function App() {
@@ -12,8 +13,9 @@ function App() {
   const [activeTab, setActiveTab] = useState('rules');
   const [modalContent, setModalContent] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showUpload, setShowUpload] = useState(false);
 
-  useEffect(() => {
+  const fetchData = () => {
     axios.get('http://127.0.0.1:5001/api/data')
       .then(response => {
         setData(response.data);
@@ -21,6 +23,10 @@ function App() {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleMacroClick = (macroName) => {
@@ -39,6 +45,11 @@ function App() {
     });
   };
 
+  const handleUploadComplete = () => {
+    setShowUpload(false);
+    fetchData();
+  }
+
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -51,8 +62,10 @@ function App() {
           <button onClick={() => setActiveTab('rules')}>Rules</button>
           <button onClick={() => setActiveTab('macros')}>Macros</button>
           <button onClick={() => setActiveTab('lists')}>Lists</button>
+          <button onClick={() => setShowUpload(!showUpload)}>Upload Rules</button>
         </nav>
       </header>
+      {showUpload && <Upload onUpload={handleUploadComplete} />}
       <div className="main-container">
         <main>
           {activeTab === 'rules' && <Rules rules={data.rules} macros={data.macros} lists={data.lists} onMacroClick={handleMacroClick} onListClick={handleListClick} onRuleClick={setSelectedItem} />}
