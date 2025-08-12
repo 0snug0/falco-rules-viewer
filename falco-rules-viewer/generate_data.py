@@ -1,11 +1,7 @@
-from flask import Flask, jsonify
 import yaml
 import os
 import re
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
+import json
 
 def parse_rules_files():
     rules_data = {
@@ -13,7 +9,7 @@ def parse_rules_files():
         "macros": [],
         "lists": [],
     }
-    rules_dir = 'rules'
+    rules_dir = '../rules'
     for filename in os.listdir(rules_dir):
         if filename.endswith('.yaml'):
             filepath = os.path.join(rules_dir, filename)
@@ -72,8 +68,7 @@ def build_dependencies(data):
 
     return usages
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
+def main():
     data = parse_rules_files()
     dependencies = build_dependencies(data)
 
@@ -85,7 +80,10 @@ def get_data():
         "dependencies": dependencies
     }
 
-    return jsonify(response_data)
+    output_path = 'frontend/public/data.json'
+    with open(output_path, 'w') as f:
+        json.dump(response_data, f, indent=2)
+    print(f"Data successfully generated at {output_path}")
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001, use_reloader=False)
+    main()

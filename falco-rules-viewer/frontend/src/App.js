@@ -14,7 +14,7 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5001/api/data')
+    axios.get('/data.json')
       .then(response => {
         setData(response.data);
       })

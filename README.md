@@ -1,23 +1,63 @@
-# Start Backend
+# Falco Rules Viewer
 
+This is a simple tool to view Falco rules, macros, and lists, and their dependencies.
+
+The application is a static single-page application that can be deployed to any static hosting provider, such as Cloudflare Pages.
+
+## How it works
+
+The Falco rules, macros, and lists are parsed from the YAML files in the `rules/` directory. This data is then used to generate a static `data.json` file that is served with the frontend.
+
+## Development
+
+To run the application locally, you need to have Node.js and npm installed.
+
+1.  **Install dependencies:**
+    ```bash
+    cd falco-rules-viewer/frontend
+    npm install
+    ```
+
+2.  **Run the development server:**
+    ```bash
+    npm start
+    ```
+    This will start a development server and open the application in your browser. The `data.json` file is not generated in this mode, so the application will not be able to fetch the data. To fix this, you can run the following command in a separate terminal from the `falco-rules-viewer` directory:
+    ```bash
+    python3 generate_data.py
+    ```
+
+## Building for production
+
+To build the application for production, run the following command from the `falco-rules-viewer/frontend` directory:
+
+```bash
+npm run build
 ```
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r falco-rules-viewer/backend/requirements.txt
-python3 falco-rules-viewer/backend/app.py
-```
 
-# Start Frontend
+This will create a `build` directory with the static files. The `build_frontend.sh` script in the `falco-rules-viewer/frontend` directory can also be used to build the application. It will first generate the `data.json` file and then build the frontend.
 
-```
-cd falco-rules-viewer/frontend
-npm install
-npm start
-```
+## Deployment to Cloudflare Pages
 
-# Add custom rules
+To deploy the application to Cloudflare Pages, you can follow these steps:
 
-If using the Sysdig Feed, remove the `falco_rules.yaml` file from the `rules/` directory and add the new rules, it can be any yaml file.
+1.  **Push your code to a GitHub repository.**
+
+2.  **Create a new Cloudflare Pages project.**
+    - Log in to your Cloudflare account and go to the Pages section.
+    - Click on "Create a project" and select your GitHub repository.
+
+3.  **Configure the build settings:**
+    - **Framework preset:** `Create React App`
+    - **Build command:** `cd falco-rules-viewer/frontend && ./build_frontend.sh`
+    - **Build output directory:** `falco-rules-viewer/frontend/build`
+
+4.  **Deploy the site.**
+    - Click on "Save and Deploy".
+
+## Add custom rules
+
+If using the Sysdig Feed, remove the `falco_rules.yaml` file from the `rules/` directory and add the new rules, it can be any yaml file. After adding the new rules, you need to rebuild the application.
 
 ![Rules Viewer](/img/Rules%20Viewer.gif)
 
