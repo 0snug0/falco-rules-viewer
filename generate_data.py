@@ -1,35 +1,30 @@
-from flask import Flask, jsonify, request
 import yaml
 import os
 import re
-from flask_cors import CORS
+import json
 
-app = Flask(__name__)
-CORS(app)
-
-def load_config():
-    with open('falco-rules-viewer/backend/config.yaml', 'r') as f:
-        return yaml.safe_load(f)
-
-def parse_rules_files(files):
+def parse_rules_files():
     rules_data = {
         "rules": [],
         "macros": [],
         "lists": [],
     }
-    for filepath in files:
-        with open(filepath, 'r') as f:
-            docs = yaml.safe_load_all(f)
-            for doc in docs:
-                if not doc:
-                    continue
-                for item in doc:
-                    if 'rule' in item:
-                        rules_data['rules'].append(item)
-                    elif 'macro' in item:
-                        rules_data['macros'].append(item)
-                    elif 'list' in item:
-                        rules_data['lists'].append(item)
+    rules_dir = './rules'
+    for filename in os.listdir(rules_dir):
+        if filename.endswith('.yaml'):
+            filepath = os.path.join(rules_dir, filename)
+            with open(filepath, 'r') as f:
+                docs = yaml.safe_load_all(f)
+                for doc in docs:
+                    if not doc:
+                        continue
+                    for item in doc:
+                        if 'rule' in item:
+                            rules_data['rules'].append(item)
+                        elif 'macro' in item:
+                            rules_data['macros'].append(item)
+                        elif 'list' in item:
+                            rules_data['lists'].append(item)
     return rules_data
 
 def build_dependencies(data):
@@ -66,17 +61,15 @@ def build_dependencies(data):
         for list_name in db['lists']:
             if re.search(r'\b' + list_name + r'\b', condition):
                  # if a macro uses a list, any rule using that macro also uses the list
-                for rule_using_macro in usages['macros'].get(macro_name, []):
+                for rule_using_macro in usages['macros'][macro_name]:
                     if rule_using_macro not in usages['lists'][list_name]:
                         usages['lists'][list_name].append(rule_using_macro)
 
 
     return usages
 
-@app.route('/api/data', methods=['GET'])
-def get_data():
-    config = load_config()
-    data = parse_rules_files(config['rules_files'])
+def main():
+    data = parse_rules_files()
     dependencies = build_dependencies(data)
 
     # Combine data and dependencies for the response
@@ -87,27 +80,10 @@ def get_data():
         "dependencies": dependencies
     }
 
-    return jsonify(response_data)
-
-@app.route('/api/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return 'No file part', 400
-    file = request.files['file']
-    if file.filename == '':
-        return 'No selected file', 400
-    if file:
-        filename = file.filename
-        filepath = os.path.join('falco-rules-viewer/backend/uploads', filename)
-        if not os.path.exists('uploads'):
-            os.makedirs('uploads')
-        file.save(filepath)
-
-        # Update config to use the new file
-        with open('falco-rules-viewer/backend/config.yaml', 'w') as f:
-            yaml.dump({'rules_files': [filepath]}, f)
-
-        return 'File uploaded successfully', 200
+    output_path = 'frontend/public/data.json'
+    with open(output_path, 'w') as f:
+        json.dump(response_data, f, indent=2)
+    print(f"Data successfully generated at {output_path}")
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001, use_reloader=False)
+    main()
