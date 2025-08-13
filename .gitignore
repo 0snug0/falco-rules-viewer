@@ -1,8 +1,6 @@
-falco-rules-viewer/backend/uploads/
-falco-rules-viewer/backend/config.yaml
 rules/
-!rules/falco_rules.yaml
-
+rules/falco_rules.yaml
+frontend/public/data.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
