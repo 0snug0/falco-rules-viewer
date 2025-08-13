@@ -37,24 +37,6 @@ npm run build
 
 This will create a `build` directory with the static files. The `build_frontend.sh` script in the `falco-rules-viewer/frontend` directory can also be used to build the application. It will first generate the `data.json` file and then build the frontend.
 
-## Deployment to Cloudflare Pages
-
-To deploy the application to Cloudflare Pages, you can follow these steps:
-
-1.  **Push your code to a GitHub repository.**
-
-2.  **Create a new Cloudflare Pages project.**
-    - Log in to your Cloudflare account and go to the Pages section.
-    - Click on "Create a project" and select your GitHub repository.
-
-3.  **Configure the build settings:**
-    - **Framework preset:** `Create React App`
-    - **Build command:** `cd falco-rules-viewer/frontend && ./build_frontend.sh`
-    - **Build output directory:** `falco-rules-viewer/frontend/build`
-
-4.  **Deploy the site.**
-    - Click on "Save and Deploy".
-
 ## Add custom rules
 
 If using the Sysdig Feed, remove the `falco_rules.yaml` file from the `rules/` directory and add the new rules, it can be any yaml file. After adding the new rules, you need to rebuild the application.
