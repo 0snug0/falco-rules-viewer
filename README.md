@@ -9,7 +9,7 @@ The application is a static single-page application that can be deployed to any 
 ### Local Docker with default rules
 
 ```
-docker run -d -p 3000:3000 --name=falco-rules-viewer ghcr.io/0snug0/falco-rules-viewer:latest
+docker run -d -p 3000:3000 --name=falco-rules-viewer ghcr.io/0snug0/falco-rules-viewer:main
 ```
 
 Open http://localhost:3000 in your browser.
@@ -19,7 +19,7 @@ Open http://localhost:3000 in your browser.
 You will need to copy your rules to the `rules/` directory. Any yaml file will work. The rules are not being deduplicated or following any of the override logic built into falco. 
 
 ```
-docker run -d -p 3000:3000 --volume ./rules/:/app/rules/ --name=falco-rules-viewer ghcr.io/0snug0/falco-rules-viewer:latest
+docker run -d -p 3000:3000 --volume ./rules/:/app/rules/ --name=falco-rules-viewer ghcr.io/0snug0/falco-rules-viewer:main
 ```
 
 Open http://localhost:3000 in your browser.
