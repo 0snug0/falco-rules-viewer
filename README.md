@@ -2,7 +2,28 @@
 
 This is a simple tool to view Falco rules, macros, and lists, and their dependencies.
 
-The application is a static single-page application that can be deployed to any static hosting provider, such as Cloudflare Pages.
+The application is a static single-page application that can be deployed to any static hosting provider.
+
+## Quick Start with Docker
+
+### Local Docker with default rules
+
+```
+docker run -d -p 3000:3000 --name=falco-rules-viewer ghcr.io/falco_rules_viewer/falco_rules_viewer:latest
+```
+
+Open http://localhost:3000 in your browser.
+
+### Local Docker with custom rules
+
+You will need to copy your rules to the `rules/` directory. Any yaml file will work. The rules are not being deduplicated or following any of the override logic built into falco. 
+
+```
+docker run -d -p 3000:3000 --volume ./rules/:/app/rules/ --name=falco-rules-viewer ghcr.io/falco_rules_viewer/falco_rules_viewer:latest
+```
+
+Open http://localhost:3000 in your browser.
+
 
 ## How it works
 
