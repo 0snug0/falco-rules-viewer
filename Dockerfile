@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Install Python and pip
-RUN apk add --no-cache python3 py3-pip
+RUN apk add --no-cache python3 py3-yaml
 
 # Set the working directory
 WORKDIR /app
@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy application files
 COPY . .
 
-# Install Python dependencies
-RUN pip3 install pyyaml
+# # Install Python dependencies
+# RUN pip3 install pyyaml
 
 # Install frontend dependencies
 RUN cd frontend && npm install

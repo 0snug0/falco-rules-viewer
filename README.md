@@ -27,15 +27,13 @@ To run the application locally, you need to have Node.js and npm installed.
     python3 generate_data.py
     ```
 
-## Building for production
+## Container Builder
 
-To build the application for production, run the following command from the `falco-rules-viewer/frontend` directory:
-
-```bash
-npm run build
+To build the container, be sure to add your custom rules to the rules directory first. Once added to that folder you can build and run your container
 ```
-
-This will create a `build` directory with the static files. The `build_frontend.sh` script in the `falco-rules-viewer/frontend` directory can also be used to build the application. It will first generate the `data.json` file and then build the frontend.
+docker build -t falco-rules-viewer .
+docker run -p 3000:3000 falco-rules-viewer
+```
 
 ## Add custom rules
 
